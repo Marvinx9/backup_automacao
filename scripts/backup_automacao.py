@@ -1,31 +1,40 @@
 import os
+import platform
 import shutil
 from datetime import datetime, timedelta
 
 caminho_dir = "/home/valcann/backupsFrom"
 destino_dir = "/home/valcann/backupsTo"
-log_backups_from = "/home/valcann/backupsFrom.log"
-log_backups_to = "/home/valcann/backupsTo.log"
+log_backup_from = "/home/valcann/backupsFrom.log"
+log_backup_to = "/home/valcann/backupsTo.log"
 
-def arquivos_info(file_path):
-    stats = os.stat(file_path)
+def arquivos_info(caminho_arquivo):
+    sistema = platform.system()
+    
+    stats = os.stat(caminho_arquivo)
+    
+    if sistema == "Windows":
+        data_de_criacao = datetime.fromtimestamp(stats.st_ctime)
+    else:
+        data_de_criacao = datetime.fromtimestamp(stats.st_mtime)
+        
     return {
-        "name": os.path.basename(file_path),
-        "size": stats.st_size,
-        "creation_time": datetime.fromtimestamp(stats.st_ctime),
-        "modification_time": datetime.fromtimestamp(stats.st_mtime),
+        "nome": os.path.basename(caminho_arquivo),
+        "tamanho": stats.st_size,
+        "data_de_criacao": data_de_criacao,
+        "data_modificacao": datetime.fromtimestamp(stats.st_mtime),
     }
 
-def registrar_logs(file_path, entries):
-    with open(file_path, "w") as log_file:
+def registrar_logs(caminho_arquivo, entries):
+    with open(caminho_arquivo, "w") as log_file:
         for entry in entries:
             log_file.write(
-                f"Name: {entry['name']}, Size: {entry['size']} bytes, "
-                f"Creation: {entry['creation_time']}, Modification: {entry['modification_time']}\n"
+                f"Nome: {entry['nome']}, Tamanho: {entry['tamanho']} bytes, "
+                f"Criacao: {entry['data_de_criacao']}, Modificacao: {entry['data_modificacao']}\n"
             )
 
 def backup_automacao():
-    cutoff_date = datetime.now() - timedelta(days=3)
+    data_referencia = datetime.now() - timedelta(days=3)
 
     if not os.path.exists(caminho_dir):
         print(f"Erro: O diretório de origem {caminho_dir} não existe.")
@@ -33,31 +42,30 @@ def backup_automacao():
     if not os.path.exists(destino_dir):
         os.makedirs(destino_dir)
 
-    backups_from_entries = []
-    backups_to_entries = []
+    backup_from_entries = []
+    backup_to_entries = []
 
-    for file_name in os.listdir(caminho_dir):
-        file_path = os.path.join(caminho_dir, file_name)
+    for nome_arquivo in os.listdir(caminho_dir):
+        caminho_arquivo = os.path.join(caminho_dir, nome_arquivo)
 
-        if not os.path.isfile(file_path):
+        if not os.path.isfile(caminho_arquivo):
             continue
+        file_info = arquivos_info(caminho_arquivo)
+        backup_from_entries.append(file_info)
 
-        file_info = arquivos_info(file_path)
-        backups_from_entries.append(file_info)
-
-        if file_info["creation_time"] < cutoff_date:
-            os.remove(file_path)
-            print(f"Removido: {file_path}")
+        if file_info["data_de_criacao"] < data_referencia:
+            os.remove(caminho_arquivo)
+            print(f"Removido: {caminho_arquivo}")
         else:
-            dest_path = os.path.join(destino_dir, file_name)
-            shutil.copy2(file_path, dest_path)
-            backups_to_entries.append(file_info)
+            dest_path = os.path.join(destino_dir, nome_arquivo)
+            shutil.copy2(caminho_arquivo, dest_path)
+            backup_to_entries.append(file_info)
             print(f"Copiado para: {dest_path}")
 
-    registrar_logs(log_backups_from, backups_from_entries)
-    registrar_logs(log_backups_to, backups_to_entries)
+    registrar_logs(log_backup_from, backup_from_entries)
+    registrar_logs(log_backup_to, backup_to_entries)
 
-    print(f"Logs salvos em {log_backups_from} e {log_backups_to}.")
+    print(f"Logs salvos em {log_backup_from} e {log_backup_to}.")
 
 if __name__ == "__main__":
     backup_automacao()
