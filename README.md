@@ -10,8 +10,9 @@ Este projeto é parte de uma avaliação técnica para programa de estágio onde
    cd automacao_ambientes
 
 2. Prepare o ambiente python:
+   ```bash
    python -m venv env
-   
+   ```
    Se (S.O) = Windows
    ```bash
    source env/Scripts/activate
@@ -21,13 +22,12 @@ Este projeto é parte de uma avaliação técnica para programa de estágio onde
    source env/bin/activate
    ```
 
-3. Garanta que sua máquina possui o diretório onde possui os arquivos: 
-   ```bash 
+3. Garanta que sua máquina possui o diretório onde possui os diretório: 
    /home/valcann/backupsFrom
-   ```
+
 Caso prefira altere as variáveis que consistem entre as linhas 6 até 9 para um diretório alternativo!
 
-4. Execute o comando principal para executar a automação:
+5. Execute o comando principal para executar a automação:
    ```bash
    python scripts/backup_automacao.py
    ```
