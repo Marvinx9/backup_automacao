@@ -7,7 +7,7 @@ Este projeto é parte de uma avaliação técnica para programa de estágio onde
 1. Clone este repositório:
    ```bash
    git clone https://github.com/Marvinx9/backup_automacao.git
-   cd automacao_ambientes
+   cd backup_automacao
 
 2. Prepare o ambiente python:
    ```bash
@@ -22,12 +22,12 @@ Este projeto é parte de uma avaliação técnica para programa de estágio onde
    source env/bin/activate
    ```
 
-3. Garanta que sua máquina possui o diretório onde possui os diretório: 
+3. Garanta que sua máquina possui o diretório: 
    /home/valcann/backupsFrom
 
-Caso prefira altere as variáveis que consistem entre as linhas 6 até 9 para um diretório alternativo!
+Caso prefira altere as variáveis que consistem entre as linhas 6 até 9 do diretório scripts/backup_automacao.py para um diretório alternativo!
 
-5. Execute o comando principal para executar a automação:
+5. Execute o comando abaixo para rodar o código:
    ```bash
    python scripts/backup_automacao.py
    ```
