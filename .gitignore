@@ -1,0 +1,8 @@
+# created by virtualenv automatically
+
+# Ignorar o ambiente virtual
+env/
+
+# Ignorar arquivos do sistema
+.DS_Store
+Thumbs.db
